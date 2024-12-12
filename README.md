@@ -4,7 +4,7 @@
 
 1. 通过 `curl` 直接下载并执行脚本：**（⚠️ 请将 `<目标机器IP地址>` 替换为您实际的目标机器 IP 地址！）**
    ```bash
-   curl -sSL https://raw.githubusercontent.com/nlw1115/upload_files/main/upload_files.sh -o upload_files.sh && bash upload_files.sh <目标机器IP地址>
+   curl -sSL https://raw.githubusercontent.com/nlw1115/upload_files/refs/heads/main/upload_files.sh -o upload_files.sh && bash upload_files.sh <目标机器IP地址>
    ```
 
 
