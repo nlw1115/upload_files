@@ -18,6 +18,44 @@ if [ -z "$REMOTE_HOST" ]; then
   exit 1
 fi
 
+# 提示用户输入密码
+read -s -p "请输入目标机器的密码: " REMOTE_PASS
+echo
+
+# 检查是否安装了 sshpass
+if ! command -v sshpass &>/dev/null; then
+  echo "sshpass 未安装，正在尝试自动安装..."
+  
+  # 获取操作系统信息
+  if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$ID
+    VERSION=$VERSION_ID
+  else
+    echo "无法检测操作系统类型，请手动安装 sshpass 后再运行脚本。"
+    exit 1
+  fi
+
+  # 根据操作系统类型安装 sshpass
+  case "$OS" in
+    ubuntu|debian)
+      sudo apt update && sudo apt install -y sshpass || {
+        echo "无法安装 sshpass，请检查网络或权限。"; exit 1;
+      }
+      ;;
+    centos|rhel|fedora)
+      sudo yum install -y epel-release && sudo yum install -y sshpass || {
+        echo "无法安装 sshpass，请检查网络或权限。"; exit 1;
+      }
+      ;;
+    *)
+      echo "不支持的操作系统类型，请手动安装 sshpass 后再运行脚本。"
+      exit 1
+      ;;
+  esac
+  echo "sshpass 安装成功。"
+fi
+
 # 查找本地包含 "x-ui" 的文件路径
 FILES=$(find / -name "*x-ui*" 2>/dev/null)
 
@@ -39,8 +77,8 @@ read -p "按回车继续，或按 Ctrl+C 取消："
 for FILE in $FILES; do
   echo "正在上传文件: $FILE"
   
-  # 使用 scp 将文件上传到目标机器
-  scp -r "$FILE" "$REMOTE_USER@$REMOTE_HOST:$FILE"
+  # 使用 sshpass 和 scp 将文件上传到目标机器
+  sshpass -p "$REMOTE_PASS" scp -r "$FILE" "$REMOTE_USER@$REMOTE_HOST:$FILE"
   
   # 检查上传是否成功
   if [ $? -eq 0 ]; then
