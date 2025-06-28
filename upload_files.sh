@@ -470,9 +470,9 @@ log_info "开始上传文件..."
 echo
 
 # 统计变量
-local success_count=0
-local failed_count=0
-local failed_files=()
+success_count=0
+failed_count=0
+failed_files=()
 
 # 上传每个文件
 for i in "${!FILES[@]}"; do
@@ -502,7 +502,7 @@ fi
 echo "================================================="
 
 # 生成上传报告
-local report_file="/tmp/xui_upload_report_$(date +%Y%m%d_%H%M%S).txt"
+report_file="/tmp/xui_upload_report_$(date +%Y%m%d_%H%M%S).txt"
 {
     echo "X-UI文件上传报告"
     echo "生成时间: $(date)"
@@ -513,7 +513,7 @@ local report_file="/tmp/xui_upload_report_$(date +%Y%m%d_%H%M%S).txt"
     echo
     echo "文件列表:"
     for i in "${!FILES[@]}"; do
-        local status="成功"
+        status="成功"
         for failed_file in "${failed_files[@]}"; do
             if [[ "$failed_file" == "${FILES[$i]}" ]]; then
                 status="失败"
