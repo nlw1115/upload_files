@@ -255,6 +255,11 @@ test_ssh_connection() {
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o LogLevel=ERROR \
+            -o BatchMode=yes \
+            -o PasswordAuthentication=yes \
+            -o PubkeyAuthentication=no \
+            -o PreferredAuthentications=password \
+            -o ControlMaster=no \
             -p "$SSH_PORT" \
             "$REMOTE_USER@$REMOTE_HOST" \
             "echo 'SSH连接测试成功'" &>/dev/null; then
@@ -403,6 +408,11 @@ safe_upload_file() {
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o LogLevel=ERROR \
+            -o BatchMode=yes \
+            -o PasswordAuthentication=yes \
+            -o PubkeyAuthentication=no \
+            -o PreferredAuthentications=password \
+            -o ControlMaster=no \
             -p "$SSH_PORT" \
             -r "$file" "$REMOTE_USER@$REMOTE_HOST:$temp_file" 2>/dev/null; then
             
@@ -431,6 +441,11 @@ safe_upload_file() {
                 -o StrictHostKeyChecking=no \
                 -o UserKnownHostsFile=/dev/null \
                 -o LogLevel=ERROR \
+                -o BatchMode=yes \
+                -o PasswordAuthentication=yes \
+                -o PubkeyAuthentication=no \
+                -o PreferredAuthentications=password \
+                -o ControlMaster=no \
                 -p "$SSH_PORT" \
                 "$REMOTE_USER@$REMOTE_HOST" \
                 "$move_cmd$perm_cmd" 2>/dev/null; then
@@ -445,6 +460,11 @@ safe_upload_file() {
                     -o StrictHostKeyChecking=no \
                     -o UserKnownHostsFile=/dev/null \
                     -o LogLevel=ERROR \
+                    -o BatchMode=yes \
+                    -o PasswordAuthentication=yes \
+                    -o PubkeyAuthentication=no \
+                    -o PreferredAuthentications=password \
+                    -o ControlMaster=no \
                     -p "$SSH_PORT" \
                     "$REMOTE_USER@$REMOTE_HOST" \
                     "rm -f '$temp_file'" 2>/dev/null || true
@@ -494,6 +514,37 @@ if [[ $failed_count -gt 0 ]]; then
     log_error "失败的文件列表:"
     for file in "${failed_files[@]}"; do
         echo "  - $file"
+    done
+    echo
+    
+    # 提供手动上传选项
+    log_info "检测到文件上传失败，可能是由于证书验证或权限问题"
+    echo "您可以尝试以下解决方案："
+    echo "1. 手动使用scp命令上传失败的文件"
+    echo "2. 检查目标服务器的SSH配置和权限设置"
+    echo "3. 确认目标目录具有写入权限"
+    echo
+    
+    while true; do
+        read -p "是否要显示手动上传命令? [y/N]: " show_manual
+        case $show_manual in
+            [Yy]|[Yy][Ee][Ss])
+                echo
+                log_info "手动上传命令示例："
+                for file in "${failed_files[@]}"; do
+                    echo "scp -P $SSH_PORT -r \"$file\" $REMOTE_USER@$REMOTE_HOST:\"$file\""
+                done
+                echo
+                echo "注意：手动上传时可能需要输入密码或处理证书确认"
+                break
+                ;;
+            [Nn]|[Nn][Oo]|"")
+                break
+                ;;
+            *)
+                echo "请输入 y 或 n"
+                ;;
+        esac
     done
 else
     log_info "所有文件上传成功！"
