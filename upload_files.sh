@@ -255,7 +255,6 @@ test_ssh_connection() {
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o LogLevel=ERROR \
-            -o BatchMode=yes \
             -o PasswordAuthentication=yes \
             -o PubkeyAuthentication=no \
             -o PreferredAuthentications=password \
@@ -408,7 +407,6 @@ safe_upload_file() {
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -o LogLevel=ERROR \
-            -o BatchMode=yes \
             -o PasswordAuthentication=yes \
             -o PubkeyAuthentication=no \
             -o PreferredAuthentications=password \
@@ -441,7 +439,6 @@ safe_upload_file() {
                 -o StrictHostKeyChecking=no \
                 -o UserKnownHostsFile=/dev/null \
                 -o LogLevel=ERROR \
-                -o BatchMode=yes \
                 -o PasswordAuthentication=yes \
                 -o PubkeyAuthentication=no \
                 -o PreferredAuthentications=password \
@@ -460,7 +457,6 @@ safe_upload_file() {
                     -o StrictHostKeyChecking=no \
                     -o UserKnownHostsFile=/dev/null \
                     -o LogLevel=ERROR \
-                    -o BatchMode=yes \
                     -o PasswordAuthentication=yes \
                     -o PubkeyAuthentication=no \
                     -o PreferredAuthentications=password \
