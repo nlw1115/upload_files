@@ -287,8 +287,6 @@ fi
 
 # 查找x-ui相关文件
 find_xui_files() {
-    log_info "正在查找x-ui相关文件..."
-    
     # 定义搜索路径，避免搜索整个根目录
     local search_paths=(
         "/etc"
@@ -304,14 +302,15 @@ find_xui_files() {
     local found_files=()
     local search_patterns=("*x-ui*" "*xui*" "*X-UI*")
     
+    # 将日志输出重定向到stderr，避免污染函数返回值
     for path in "${search_paths[@]}"; do
         if [[ -d "$path" ]]; then
-            log_debug "搜索路径: $path"
+            log_debug "搜索路径: $path" >&2
             for pattern in "${search_patterns[@]}"; do
                 while IFS= read -r -d '' file; do
                     if [[ -e "$file" ]]; then
                         found_files+=("$file")
-                        log_debug "找到文件: $file"
+                        log_debug "找到文件: $file" >&2
                     fi
                 done < <(find "$path" -name "$pattern" -print0 2>/dev/null)
             done
