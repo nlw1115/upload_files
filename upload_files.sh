@@ -353,7 +353,7 @@ echo
 printf "%-5s %-10s %s\n" "序号" "大小" "文件路径"
 printf "%-5s %-10s %s\n" "----" "----" "--------"
 for i in "${!FILES[@]}"; do
-    local size=$(get_file_size "${FILES[$i]}")
+    size=$(get_file_size "${FILES[$i]}")
     printf "%-5d %-10s %s\n" "$((i+1))" "$size" "${FILES[$i]}"
 done
 echo
